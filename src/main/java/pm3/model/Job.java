@@ -5,6 +5,7 @@ public class Job {
     protected String name;
     protected int levelCap;
 
+    public Job(){}
     public Job(int jobID){
         this.jobID = jobID;
     }

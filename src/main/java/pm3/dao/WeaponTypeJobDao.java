@@ -1,5 +1,6 @@
 package pm3.dao;
 
+import pm3.model.Job;
 import pm3.model.WeaponType;
 import pm3.model.WeaponTypeJob;
 
@@ -86,6 +87,45 @@ public class WeaponTypeJobDao {
             }
         }
         return weaponTypes;
+    }
+
+    public List<Job> getJobByWeaponType(String weaponType) throws SQLException {
+        List<Job> jobs = new ArrayList<>();
+        String selectQuery = "SELECT JobID FROM WeaponTypeJob WHERE WeaponType = ?;";
+        Connection connection = null;
+        PreparedStatement selectStmt = null;
+        ResultSet results = null;
+        JobDao jobDao = JobDao.getInstance();
+        try {
+            connection = connectionManager.getConnection();
+            selectStmt = connection.prepareStatement(selectQuery);
+            selectStmt.setString(1, weaponType);
+
+            results = selectStmt.executeQuery();
+            while (results.next()) {
+                int jobID = results.getInt("JobID");
+                try {
+                    Job job = jobDao.getJobById(jobID);
+                    jobs.add(job);
+                } catch (IllegalArgumentException e) {
+                    System.err.println(e);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if (results != null) {
+                results.close();
+            }
+            if (selectStmt != null) {
+                selectStmt.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return jobs;
     }
 
     public boolean addWeaponTypesForJobId(int jobId, List<WeaponType> newWeaponTypes) throws SQLException {

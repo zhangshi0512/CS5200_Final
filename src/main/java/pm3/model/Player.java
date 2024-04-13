@@ -5,6 +5,7 @@ public class Player {
     String name;
     String emailAddress;
 
+    public Player(){}
     public Player(int playerID){
         this.playerID = playerID;
     }

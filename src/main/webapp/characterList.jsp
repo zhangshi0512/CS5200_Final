@@ -53,13 +53,13 @@ table, th, td {
        <c:forEach var="character" items="${characters}">
        
            <tr>
-           		<td>${character.player.name}</td>
+           		<td><a href="findplayers?email=${character.player.emailAddress}">${character.player.name}</a></td>
            		<td>${character.firstName}</td>
            		<td>${character.lastName}</td>
            		<td>${character.maxHP}</td>
            		<td>${character.maxMP}</td>
-           		<td>${character.currentJob.name}</td>
-           		<td>${character.mainHandWeapon.name}</td>
+           		<td><a href="findjob?jobID=${character.currentJob.jobID}">${character.currentJob.name}</a></td>
+           		<td><a href="findmainhandweapon?weaponID=${character.mainHandWeapon.itemID}">${character.mainHandWeapon.name}</a></td>
            		<td>${character.strength}</td>
            		<td>${character.dexterity}</td>
            		<td>${character.vitality}</td>

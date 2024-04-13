@@ -59,6 +59,40 @@ public class PlayerDao {
         }
     }
 
+    public Player getPlayerByEmail(String email) throws SQLException {
+        String selectPlayer = "SELECT PlayerID, Name, EmailAddress FROM Player WHERE EmailAddress = ?;";
+        Connection connection = null;
+        PreparedStatement selectStmt = null;
+        ResultSet results = null;
+        try {
+            connection = connectionManager.getConnection();
+            selectStmt = connection.prepareStatement(selectPlayer);
+            selectStmt.setString(1, email);
+            results = selectStmt.executeQuery();
+            if(results.next()) {
+                int resultPlayerID = results.getInt("PlayerID");
+                String name = results.getString("Name");
+                String emailAddress = results.getString("EmailAddress");
+                Player player = new Player(resultPlayerID, name, emailAddress);
+                return player;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(results != null) {
+                results.close();
+            }
+            if(selectStmt != null) {
+                selectStmt.close();
+            }
+            if(connection != null) {
+                connection.close();
+            }
+        }
+        return null;
+    }
+
     public Player getPlayerById(int playerID) throws SQLException {
         String selectPlayer = "SELECT PlayerID, Name, EmailAddress FROM Player WHERE PlayerID = ?;";
         Connection connection = null;

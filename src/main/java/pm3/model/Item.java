@@ -8,7 +8,7 @@ public class Item {
   protected Boolean ForSale;
   protected Integer ItemLevel;
 
-
+  public Item(){}
   public Item(Integer itemID, String name, Integer maxStackSize, Boolean forSale,
       Integer itemLevel) {
     ItemID = itemID;
