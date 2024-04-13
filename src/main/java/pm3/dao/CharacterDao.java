@@ -174,35 +174,58 @@ public class CharacterDao {
         }
     }
     
-    public List<Character> getCharactersByFirstName(String firstName) throws SQLException {
+    public List<Character> getAllCharacters() throws SQLException {
         List<Character> characters = new ArrayList<>();
-        String selectCharacters = "SELECT * FROM `Character` WHERE FirstName LIKE ?;";
+        String selectAllCharacters = "SELECT `Character`.*, Job.Name AS JobName, Job.LevelCap FROM `Character` " +
+                "INNER JOIN Job ON `Character`.CurrentJobID = Job.JobID " +
+                "ORDER BY LastName ASC, FirstName ASC;";
+
         Connection connection = null;
         PreparedStatement selectStmt = null;
         ResultSet results = null;
         try {
             connection = connectionManager.getConnection();
-            selectStmt = connection.prepareStatement(selectCharacters);
-            selectStmt.setString(1, "%" + firstName + "%");
+            selectStmt = connection.prepareStatement(selectAllCharacters);
             results = selectStmt.executeQuery();
             while (results.next()) {
                 int characterID = results.getInt("CharacterID");
-                // Assume getPlayerById and getJobById are implemented correctly.
                 Player player = PlayerDao.getInstance().getPlayerById(results.getInt("PlayerID"));
+                String firstName = results.getString("FirstName");
+                String lastName = results.getString("LastName");
+                int maxHP = results.getInt("HPMax");
+                int maxMP = results.getInt("MPMax");
+                int strength = results.getInt("Strength");
+                int dexterity = results.getInt("Dexterity");
+                int vitality = results.getInt("Vitality");
+                int intelligence = results.getInt("Intelligence");
+                int mind = results.getInt("Mind");
+                int criticalHit = results.getInt("CriticalHit");
+                int determination = results.getInt("Determination");
+                int directHitRate = results.getInt("DirectHitRate");
+                int defense = results.getInt("Defense");
+                int magicDefense = results.getInt("MagicDefense");
+                int attackPower = results.getInt("AttackPower");
+                int skillSpeed = results.getInt("SkillSpeed");
+                int attackMagicPotency = results.getInt("AttackMagicPotency");
+                int healingMagicPotency = results.getInt("HealingMagicPotency");
+                int spellSpeed = results.getInt("SpellSpeed");
+                int averageItemLevel = results.getInt("AverageItemLevel");
+                int tenacity = results.getInt("Tenacity");
+                int piety = results.getInt("Piety");
                 Job currentJob = JobDao.getInstance().getJobById(results.getInt("CurrentJobID"));
                 Weapon mainHandWeapon = WeaponDao.getInstance().getWeaponByID(results.getInt("MainHandWeaponID"));
+                
+                // Assume Job class has a constructor that takes name and levelCap.
+                String jobName = results.getString("JobName");
+                int levelCap = results.getInt("LevelCap");
+                Job job = new Job(jobName, levelCap);
 
-                Character character = new Character(
-                    characterID, player, results.getString("FirstName"), results.getString("LastName"),
-                    results.getInt("HPMax"), results.getInt("MPMAX"), currentJob, mainHandWeapon,
-                    results.getInt("Strength"), results.getInt("Dexterity"), results.getInt("Vitality"),
-                    results.getInt("Intelligence"), results.getInt("Mind"), results.getInt("CriticalHit"),
-                    results.getInt("Determination"), results.getInt("DirectHitRate"), results.getInt("Defense"),
-                    results.getInt("MagicDefense"), results.getInt("AttackPower"), results.getInt("SkillSpeed"),
-                    results.getInt("AttackMagicPotency"), results.getInt("HealingMagicPotency"),
-                    results.getInt("SpellSpeed"), results.getInt("AverageItemLevel"), results.getInt("Tenacity"),
-                    results.getInt("Piety")
-                );
+                // Create a new Character instance.
+                Character character = new Character(characterID, player, firstName, lastName, maxHP, maxMP,
+                        currentJob, mainHandWeapon, strength, dexterity, vitality, intelligence, mind, criticalHit,
+                        determination, directHitRate, defense, magicDefense, attackPower, skillSpeed, attackMagicPotency,
+                        healingMagicPotency, spellSpeed, averageItemLevel, tenacity, piety);
+                // Add this character to the list.
                 characters.add(character);
             }
         } catch (SQLException e) {
@@ -215,6 +238,85 @@ public class CharacterDao {
         }
         return characters;
     }
+
+    
+    public List<Character> getCharactersByFirstName(String firstName) throws SQLException {
+        List<Character> characters = new ArrayList<>();
+        String selectCharacters = "SELECT Character.CharacterID, PlayerID, FirstName, LastName, HPMax, MPMAX, " +
+        	    "CurrentJobID, MainHandWeaponID, Strength, Dexterity, Vitality, Intelligence, " +
+        	    "Mind, CriticalHit, Determination, DirectHitRate, Defense, MagicDefense, " +
+        	    "AttackPower, SkillSpeed, AttackMagicPotency, HealingMagicPotency, " +
+        	    "SpellSpeed, AverageItemLevel, Tenacity, Piety, Job.Name AS JobName, Job.LevelCap " +
+        	    "FROM `Character` " +
+        	    "INNER JOIN Job ON Character.CurrentJobID = Job.JobID " +
+        	    "WHERE Character.FirstName LIKE ? " +
+        	    "ORDER BY LastName;";
+        Connection connection = null;
+        PreparedStatement selectStmt = null;
+        ResultSet results = null;
+        try {
+            connection = connectionManager.getConnection();
+            selectStmt = connection.prepareStatement(selectCharacters);
+            selectStmt.setString(1, "%" + firstName + "%");
+            results = selectStmt.executeQuery();
+            while (results.next()) {
+                int characterID = results.getInt("CharacterID");
+                // Additional field for the job name.
+                String jobName = results.getString("JobName");
+                // Assume getPlayerById and getJobById are implemented correctly.
+                Player player = PlayerDao.getInstance().getPlayerById(results.getInt("PlayerID"));
+                Job currentJob = new Job(results.getInt("CurrentJobID"), jobName, results.getInt("LevelCap"));
+                Weapon mainHandWeapon = WeaponDao.getInstance().getWeaponByID(results.getInt("MainHandWeaponID"));
+                
+                // Instantiate a new Character object with the job object that includes the name.
+                Character character = new Character(
+                    characterID,
+                    player,
+                    results.getString("FirstName"),
+                    results.getString("LastName"),
+                    results.getInt("HPMax"),
+                    results.getInt("MPMAX"),
+                    currentJob,
+                    mainHandWeapon,
+                    results.getInt("Strength"),
+                    results.getInt("Dexterity"),
+                    results.getInt("Vitality"),
+                    results.getInt("Intelligence"),
+                    results.getInt("Mind"),
+                    results.getInt("CriticalHit"),
+                    results.getInt("Determination"),
+                    results.getInt("DirectHitRate"),
+                    results.getInt("Defense"),
+                    results.getInt("MagicDefense"),
+                    results.getInt("AttackPower"),
+                    results.getInt("SkillSpeed"),
+                    results.getInt("AttackMagicPotency"),
+                    results.getInt("HealingMagicPotency"),
+                    results.getInt("SpellSpeed"),
+                    results.getInt("AverageItemLevel"),
+                    results.getInt("Tenacity"),
+                    results.getInt("Piety")
+                );
+                // Add the character with the job name to the list.
+                characters.add(character);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if (results != null) {
+                results.close();
+            }
+            if (selectStmt != null) {
+                selectStmt.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return characters;
+    }
+
     
     public Character updateCharacter(Character character) throws SQLException {
         String updateQuery = "UPDATE `Character` SET FirstName = ?, LastName = ? WHERE CharacterID = ?;";

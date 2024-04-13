@@ -8,6 +8,7 @@ public class Character {
     protected int maxHP;
     protected int maxMP;
     protected Job currentJob;
+    protected String jobName;
     protected Weapon mainHandWeapon;
     protected int strength;
     protected int dexterity;
@@ -89,8 +90,6 @@ public class Character {
         this.piety = piety;
     }
 
-
-
     public int getCharacterID() {
         return characterID;
     }
@@ -141,6 +140,16 @@ public class Character {
 
     public Job getCurrentJob() {
         return currentJob;
+    }
+    
+    // Add a getter for the jobName
+    public String getJobName() {
+        return jobName;
+    }
+
+    // Add a setter for the jobName
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
     }
 
     public void setCurrentJob(Job currentJob) {

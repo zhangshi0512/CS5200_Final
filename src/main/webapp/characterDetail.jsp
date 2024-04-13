@@ -7,7 +7,10 @@
 </head>
 <body>
     <h1>Character Details</h1>
-    <% Character character = (Character) request.getAttribute("character"); %>
+    <%
+        Character character = (Character) request.getAttribute("character");
+        if (character != null) {
+    %>
     <p>ID: <%= character.getCharacterID() %></p>
     <p>First Name: <%= character.getFirstName() %></p>
     <p>Last Name: <%= character.getLastName() %></p>
@@ -22,5 +25,12 @@
         <input type="hidden" name="id" value="<%= character.getCharacterID() %>">
         <input type="submit" value="Update">
     </form>
+    <%
+        } else {
+    %>
+    <p>Character not found.</p>
+    <%
+        }
+    %>
 </body>
 </html>

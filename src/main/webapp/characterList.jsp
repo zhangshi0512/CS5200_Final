@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Search Characters</h1>
-    <form action="CharacterList" method="get">
+    <form action="characterList" method="get">
         First Name: <input type="text" name="searchName" />
         Job: <input type="text" name="filterJob" />
         <input type="submit" value="Search" />
@@ -17,8 +17,8 @@
     <ul>
         <c:forEach var="character" items="${characters}">
             <li>
-                <a href="characterDetail.jsp?characterId=${character.characterId}">
-                    ${character.firstName} ${character.lastName} - ${character.job}
+                <a href="characterDetail?id=${character.characterID}">
+                    ${character.firstName} ${character.lastName} - ${character.currentJob.name}
                 </a>
             </li>
         </c:forEach>
