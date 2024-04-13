@@ -1,135 +1,135 @@
 package pm3.model;
 
 public class Weapon extends Item{
-  protected String WeaponType;
-  protected Integer RequiredLevel;
-  protected Integer DamageDone;
-  protected Double AutoAttack;
-  protected Double AttackDelay;
-  protected Integer StrengthBonus;
-  protected Integer VitalityBonus;
-  protected Integer DeterminationBonus;
-  protected Integer DirectHitRateBonus;
-  protected Integer TenacityBonus;
-  protected Integer SkillSpeedBonus;
-  protected Integer CriticalHitBonus;
+  protected String weaponType;
+  protected int requiredLevel;
+  protected int damageDone;
+  protected double autoAttack;
+  protected double attackDelay;
+  protected int strengthBonus;
+  protected int vitalityBonus;
+  protected int determinationBonus;
+  protected int directHitRateBonus;
+  protected int tenacityBonus;
+  protected int skillSpeedBonus;
+  protected int criticalHitBonus;
 
   public Weapon(Integer itemID, String name, Integer maxStackSize, Boolean forSale,
       Integer itemLevel,
       String weaponType, Integer requiredLevel, Integer damageDone, Double autoAttack,
       Double attackDelay) {
     super(itemID, name, maxStackSize, forSale, itemLevel);
-    WeaponType = weaponType;
-    RequiredLevel = requiredLevel;
-    DamageDone = damageDone;
-    AutoAttack = autoAttack;
-    AttackDelay = attackDelay;
+    weaponType = weaponType;
+    requiredLevel = requiredLevel;
+    damageDone = damageDone;
+    autoAttack = autoAttack;
+    attackDelay = attackDelay;
   }
 
   public Weapon(String name, Integer maxStackSize, Boolean forSale, Integer itemLevel,
       String weaponType, Integer requiredLevel, Integer damageDone, Double autoAttack,
       Double attackDelay) {
     super(name, maxStackSize, forSale, itemLevel);
-    WeaponType = weaponType;
-    RequiredLevel = requiredLevel;
-    DamageDone = damageDone;
-    AutoAttack = autoAttack;
-    AttackDelay = attackDelay;
+    weaponType = weaponType;
+    requiredLevel = requiredLevel;
+    damageDone = damageDone;
+    autoAttack = autoAttack;
+    attackDelay = attackDelay;
   }
 
   public String getWeaponType() {
-    return WeaponType;
+    return weaponType;
   }
 
   public void setWeaponType(String weaponType) {
-    WeaponType = weaponType;
+    weaponType = weaponType;
   }
 
   public Integer getRequiredLevel() {
-    return RequiredLevel;
+    return requiredLevel;
   }
 
   public void setRequiredLevel(Integer requiredLevel) {
-    RequiredLevel = requiredLevel;
+    requiredLevel = requiredLevel;
   }
 
   public Integer getDamageDone() {
-    return DamageDone;
+    return damageDone;
   }
 
   public void setDamageDone(Integer damageDone) {
-    DamageDone = damageDone;
+    damageDone = damageDone;
   }
 
   public Double getAutoAttack() {
-    return AutoAttack;
+    return autoAttack;
   }
 
   public void setAutoAttack(Double autoAttack) {
-    AutoAttack = autoAttack;
+    autoAttack = autoAttack;
   }
 
   public Double getAttackDelay() {
-    return AttackDelay;
+    return attackDelay;
   }
 
   public void setAttackDelay(Double attackDelay) {
-    AttackDelay = attackDelay;
+    attackDelay = attackDelay;
   }
 
   public Integer getStrengthBonus() {
-    return StrengthBonus;
+    return strengthBonus;
   }
 
   public void setStrengthBonus(Integer strengthBonus) {
-    StrengthBonus = strengthBonus;
+    strengthBonus = strengthBonus;
   }
 
   public Integer getVitalityBonus() {
-    return VitalityBonus;
+    return vitalityBonus;
   }
 
   public void setVitalityBonus(Integer vitalityBonus) {
-    VitalityBonus = vitalityBonus;
+    vitalityBonus = vitalityBonus;
   }
 
   public Integer getDeterminationBonus() {
-    return DeterminationBonus;
+    return determinationBonus;
   }
 
   public void setDeterminationBonus(Integer determinationBonus) {
-    DeterminationBonus = determinationBonus;
+    determinationBonus = determinationBonus;
   }
 
   public Integer getDirectHitRateBonus() {
-    return DirectHitRateBonus;
+    return directHitRateBonus;
   }
 
   public void setDirectHitRateBonus(Integer directHitRateBonus) {
-    DirectHitRateBonus = directHitRateBonus;
+    directHitRateBonus = directHitRateBonus;
   }
 
   public Integer getTenacityBonus() {
-    return TenacityBonus;
+    return tenacityBonus;
   }
 
   public void setTenacityBonus(Integer tenacityBonus) {
-    TenacityBonus = tenacityBonus;
+    tenacityBonus = tenacityBonus;
   }
 
   public Integer getSkillSpeedBonus() {
-    return SkillSpeedBonus;
+    return skillSpeedBonus;
   }
 
   public void setSkillSpeedBonus(Integer skillSpeedBonus) {
-    SkillSpeedBonus = skillSpeedBonus;
+    skillSpeedBonus = skillSpeedBonus;
   }
 
   public Integer getCriticalHitBonus() {
-    return CriticalHitBonus;
+    return criticalHitBonus;
   }
 
   public void setCriticalHitBonus(Integer criticalHitBonus) {
-    CriticalHitBonus = criticalHitBonus;
+    criticalHitBonus = criticalHitBonus;
   }
 }
