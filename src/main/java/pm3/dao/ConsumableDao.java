@@ -21,68 +21,69 @@ public class ConsumableDao extends ItemDao{
   }
 
   public Consumable create(Consumable consumable) throws SQLException {
-    if(consumable.getItemID() == null){
-      Item item = new Item(consumable.getName(), consumable.getMaxStackSize(),consumable.getForSale(), consumable.getItemLevel());
-      item.setVendorPrice(consumable.getVendorPrice());
-      Item created_item = super.create(item);
-      consumable.setItemID(created_item.getItemID());
-    }
+	    if(consumable.getItemID() == null){
+	        Item item = new Item(consumable.getName(), consumable.getMaxStackSize(), consumable.getForSale(), consumable.getItemLevel());
+	        item.setVendorPrice(consumable.getVendorPrice());
+	        Item created_item = super.create(item);
+	        consumable.setItemID(created_item.getItemID());
+	    }
 
-    String insertConsumable = "INSERT INTO Consumable(ConsumableID,`Description`,TenacityBonus"
-        + ",VitalityBonus,DeterminationBonus,TenacityCap,VitalityCap,DeterminationCap"
-        + ") VALUES(?,?,?,?,?,?,?,?);";
-    Connection connection = null;
-    PreparedStatement insertStmt = null;
-    try {
-      connection = connectionManager.getConnection();
-      insertStmt = connection.prepareStatement(insertConsumable);
-      insertStmt.setInt(1, consumable.getItemID());
-      insertStmt.setString(2, consumable.getDescription());
-      if(consumable.getTenacityBonus() == null){
-        insertStmt.setNull(3, Types.DECIMAL);
-      }else{
-        insertStmt.setDouble(3, consumable.getTenacityBonus());
-      }
-      if(consumable.getVitalityBonus() == null){
-        insertStmt.setNull(4, Types.DECIMAL);
-      }else{
-        insertStmt.setDouble(4, consumable.getVitalityBonus());
-      }
-      if(consumable.getDeterminationBonus() == null){
-        insertStmt.setNull(5, Types.DECIMAL);
-      }else{
-        insertStmt.setDouble(5, consumable.getDeterminationBonus());
-      }
-      if(consumable.getTenacityCap() == null){
-        insertStmt.setNull(6, Types.INTEGER);
-      }else{
-        insertStmt.setInt(6, consumable.getTenacityCap());
-      }
-      if(consumable.getVitalityCap() == null){
-        insertStmt.setNull(7, Types.INTEGER);
-      }else{
-        insertStmt.setInt(7, consumable.getVitalityCap());
-      }
-      if(consumable.getDeterminationCap() == null){
-        insertStmt.setNull(8, Types.INTEGER);
-      }else{
-        insertStmt.setInt(8, consumable.getDeterminationCap());
-      }
-      insertStmt.executeUpdate();
+	    String insertConsumable = "INSERT INTO Consumable(ConsumableID, `Description`, TenacityBonus, "
+	        + "VitalityBonus, DeterminationBonus, TenacityCap, VitalityCap, DeterminationCap) "
+	        + "VALUES(?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE Description=VALUES(Description), "
+	        + "TenacityBonus=VALUES(TenacityBonus), VitalityBonus=VALUES(VitalityBonus), "
+	        + "DeterminationBonus=VALUES(DeterminationBonus), TenacityCap=VALUES(TenacityCap), "
+	        + "VitalityCap=VALUES(VitalityCap), DeterminationCap=VALUES(DeterminationCap);";
 
-      return consumable;
-    } catch (SQLException e) {
-      e.printStackTrace();
-      throw e;
-    } finally {
-      if(connection != null) {
-        connection.close();
-      }
-      if(insertStmt != null) {
-        insertStmt.close();
-      }
-    }
-  }
+	    Connection connection = null;
+	    PreparedStatement insertStmt = null;
+	    try {
+	        connection = connectionManager.getConnection();
+	        insertStmt = connection.prepareStatement(insertConsumable);
+	        insertStmt.setInt(1, consumable.getItemID());
+	        insertStmt.setString(2, consumable.getDescription());
+	        setDoubleOrNull(insertStmt, 3, consumable.getTenacityBonus());
+	        setDoubleOrNull(insertStmt, 4, consumable.getVitalityBonus());
+	        setDoubleOrNull(insertStmt, 5, consumable.getDeterminationBonus());
+	        setIntOrNull(insertStmt, 6, consumable.getTenacityCap());
+	        setIntOrNull(insertStmt, 7, consumable.getVitalityCap());
+	        setIntOrNull(insertStmt, 8, consumable.getDeterminationCap());
+
+	        insertStmt.executeUpdate();
+	        return consumable;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        closeResources(connection, insertStmt);
+	    }
+	}
+
+	private void setDoubleOrNull(PreparedStatement stmt, int parameterIndex, Double value) throws SQLException {
+	    if (value == null) {
+	        stmt.setNull(parameterIndex, Types.DECIMAL);
+	    } else {
+	        stmt.setDouble(parameterIndex, value);
+	    }
+	}
+
+	private void setIntOrNull(PreparedStatement stmt, int parameterIndex, Integer value) throws SQLException {
+	    if (value == null) {
+	        stmt.setNull(parameterIndex, Types.INTEGER);
+	    } else {
+	        stmt.setInt(parameterIndex, value);
+	    }
+	}
+
+	private void closeResources(Connection connection, PreparedStatement stmt) throws SQLException {
+	    if (stmt != null) {
+	        stmt.close();
+	    }
+	    if (connection != null) {
+	        connection.close();
+	    }
+	}
+
 
   public Consumable getConsumableByID(int ConsumableID) throws SQLException{
     Item item = super.getItemByID(ConsumableID);

@@ -23,32 +23,32 @@ public class GearTypeDao {
         return instance;
     }
 
-    public GearType create(GearType gearType)throws SQLException{
-        String insertGearType = "INSERT INTO GearType(TypeName) VALUES(?)";
+    public GearType create(GearType gearType) throws SQLException {
+        String insertGearType = "INSERT INTO GearType(TypeName) VALUES(?) ON DUPLICATE KEY UPDATE TypeName = VALUES(TypeName);";
         Connection connection = null;
         PreparedStatement insertStmt = null;
-        try{
+        try {
             connection = connectionManager.getConnection();
             insertStmt = connection.prepareStatement(insertGearType);
-
             insertStmt.setString(1, gearType.name());
 
             insertStmt.executeUpdate();
 
             return gearType;
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             throw e;
         } finally {
-            if(connection != null) {
-                connection.close();
-            }
-            if(insertStmt != null) {
+            if (insertStmt != null) {
                 insertStmt.close();
+            }
+            if (connection != null) {
+                connection.close();
             }
         }
     }
+
     public GearType getGearTypeByTypeName(String typeName) throws SQLException {
         try {
             return GearType.valueOf(typeName);

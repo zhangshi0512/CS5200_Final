@@ -23,32 +23,32 @@ public class GearSlotDao {
         return instance;
     }
 
-    public GearSlot create(GearSlot gearSlot)throws SQLException{
-        String insertGearSlot = "INSERT INTO GearSlot(SlotName) VALUES(?)";
+    public GearSlot create(GearSlot gearSlot) throws SQLException {
+        String insertGearSlot = "INSERT INTO GearSlot(SlotName) VALUES(?) ON DUPLICATE KEY UPDATE SlotName = VALUES(SlotName);";
         Connection connection = null;
         PreparedStatement insertStmt = null;
-        try{
+        try {
             connection = connectionManager.getConnection();
             insertStmt = connection.prepareStatement(insertGearSlot);
-
             insertStmt.setString(1, gearSlot.name());
 
             insertStmt.executeUpdate();
 
             return gearSlot;
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             throw e;
         } finally {
-            if(connection != null) {
-                connection.close();
-            }
-            if(insertStmt != null) {
+            if (insertStmt != null) {
                 insertStmt.close();
+            }
+            if (connection != null) {
+                connection.close();
             }
         }
     }
+    
     public GearSlot getGearSlotByTypeName(String typeName) throws SQLException {
         String selectGearSlot = "SELECT SlotName FROM GearSlot WHERE SlotName = ?;";
         Connection connection = null;

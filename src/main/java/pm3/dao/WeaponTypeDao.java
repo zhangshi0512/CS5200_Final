@@ -24,32 +24,34 @@ public class WeaponTypeDao {
         return instance;
     }
 
-    public WeaponType create(WeaponType weaponType)throws SQLException{
-        String insertWeaponType = "INSERT INTO WeaponType(TypeName) VALUES(?)";
+    public WeaponType create(WeaponType weaponType) throws SQLException {
+        // SQL statement that includes handling for duplicate key entries.
+        String insertWeaponType = "INSERT INTO WeaponType(TypeName) VALUES(?) ON DUPLICATE KEY UPDATE TypeName = VALUES(TypeName);";
         Connection connection = null;
         PreparedStatement insertStmt = null;
-        try{
+        try {
             connection = connectionManager.getConnection();
             insertStmt = connection.prepareStatement(insertWeaponType);
-
             insertStmt.setString(1, weaponType.name());
 
             insertStmt.executeUpdate();
 
             return weaponType;
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             throw e;
         } finally {
-            if(connection != null) {
-                connection.close();
-            }
-            if(insertStmt != null) {
+            if (insertStmt != null) {
                 insertStmt.close();
+            }
+            if (connection != null) {
+                connection.close();
             }
         }
     }
+
+    
     public WeaponType getWeaponTypeByName(String typeName) throws SQLException {
         String selectWeaponType = "SELECT TypeName FROM WeaponType WHERE TypeName = ?;";
         Connection connection = null;
