@@ -21,41 +21,30 @@ public class PlayerDao {
     }
 
     public Player create(Player player) throws SQLException{
-
-        String insertPlayer = "INSERT INTO Player(`Name`,EmailAddress) VALUES(?,?)";
+        String insertPlayer = "INSERT INTO Player(Name, EmailAddress) VALUES(?, ?);";
         Connection connection = null;
         PreparedStatement insertStmt = null;
         ResultSet resultKey = null;
-        try{
+        try {
             connection = connectionManager.getConnection();
             insertStmt = connection.prepareStatement(insertPlayer, Statement.RETURN_GENERATED_KEYS);
-
-            insertStmt.setString(1,player.getName());
-            insertStmt.setString(2,player.getEmailAddress());
-
+            insertStmt.setString(1, player.getName());
+            insertStmt.setString(2, player.getEmailAddress());
             insertStmt.executeUpdate();
-
-
             resultKey = insertStmt.getGeneratedKeys();
-            int playerID = -1;
-            if(resultKey.next()) {
-                playerID = resultKey.getInt(1);
+            if (resultKey.next()) {
+                player.setPlayerID(resultKey.getInt(1));
             } else {
                 throw new SQLException("Unable to retrieve auto-generated key.");
             }
-            player.setPlayerID(playerID);
             return player;
-
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             throw e;
         } finally {
-            if(connection != null) {
-                connection.close();
-            }
-            if(insertStmt != null) {
-                insertStmt.close();
-            }
+            if (resultKey != null) resultKey.close();
+            if (insertStmt != null) insertStmt.close();
+            if (connection != null) connection.close();
         }
     }
 
@@ -177,6 +166,20 @@ public class PlayerDao {
             }
         }
     }
+    
+    public boolean emailExists(String email) throws SQLException {
+        String selectEmail = "SELECT 1 FROM Player WHERE EmailAddress = ?";
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement selectStmt = connection.prepareStatement(selectEmail)) {
+            selectStmt.setString(1, email);
+            ResultSet results = selectStmt.executeQuery();
+            if (results.next()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
 }	

@@ -40,15 +40,34 @@ public class Inserter {
 		WeaponTypeJobDao weaponTypeJobDao = WeaponTypeJobDao.getInstance();
 
 		// create
-		Player player1 = new Player("Link", "link@hyrule.com");
-		playerDao.create(player1);
-		System.out.println("Created Player: " + player1.getName() + " with email: " + player1.getEmailAddress());
-		Player player2 = new Player("Mario", "mario@1.com");
-		playerDao.create(player2);
-		System.out.println("Created Player: " + player2.getName() + " with email: " + player2.getEmailAddress());
-		Player player3 = new Player("Lara Lara", "lara@croftmanor.com");
-		playerDao.create(player3);
-		System.out.println("Created Player: " + player3.getName() + " with email: " + player3.getEmailAddress());
+		Player player1 = null, player2 = null, player3 = null;
+
+		if (!playerDao.emailExists("link@hyrule.com")) {
+		    player1 = new Player("Link", "link@hyrule.com");
+		    playerDao.create(player1);
+		    System.out.println("Created Player: " + player1.getName() + " with email: " + player1.getEmailAddress());
+		} else {
+		    player1 = playerDao.getPlayerByEmail("link@hyrule.com");
+		    System.out.println("Email already exists: link@hyrule.com");
+		}
+
+		if (!playerDao.emailExists("mario@1.com")) {
+		    player2 = new Player("Mario", "mario@1.com");
+		    playerDao.create(player2);
+		    System.out.println("Created Player: " + player2.getName() + " with email: " + player2.getEmailAddress());
+		} else {
+		    player2 = playerDao.getPlayerByEmail("mario@1.com");
+		    System.out.println("Email already exists: mario@1.com");
+		}
+
+		if (!playerDao.emailExists("lara@croftmanor.com")) {
+		    player3 = new Player("Lara Lara", "lara@croftmanor.com");
+		    playerDao.create(player3);
+		    System.out.println("Created Player: " + player3.getName() + " with email: " + player3.getEmailAddress());
+		} else {
+		    player3 = playerDao.getPlayerByEmail("lara@croftmanor.com");
+		    System.out.println("Email already exists: lara@croftmanor.com");
+		}
 
 		Job job1 = new Job("Warrior", 50);
 		jobDao.create(job1);
@@ -137,7 +156,7 @@ public class Inserter {
 		consumable1.setVendorPrice(5.00);
 		consumableDao.create(consumable1);
 
-		Character character1 = new Character(player1,"Cloud", "Ava", 999, 999, job1, weapon1, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100);
+		Character character1 = new Character(player1, "Cloud", "Ava", 999, 999, job1, weapon1, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100);
 		characterDao.create(character1);
 		System.out.println("Created Character: " + character1.getFirstName() + " " + character1.getLastName());
 
