@@ -28,7 +28,7 @@
     </session-config>
 
     <welcome-file-list>
-        <welcome-file>characterList.jsp</welcome-file>
+        <welcome-file>characterList</welcome-file>
     </welcome-file-list>
 
 </web-app>

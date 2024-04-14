@@ -25,9 +25,10 @@ public class CharacterListServlet extends HttpServlet {
 
 	    try {
 	        List<Character> characters;
+	        List<Job> allJobs = jobDao.getAllJobs();
 
 	        // Check conditions for filtering.
-	        if ((firstName == null || firstName.trim().isEmpty()) && (filterJobId == null || filterJobId.isEmpty())) {
+	        if ((firstName == null || firstName.trim().isEmpty()) && (filterJobId == null || filterJobId.trim().isEmpty())) {
 	            // No filters provided, get all characters.
 	            characters = characterDao.getAllCharacters();
 	        } else {
@@ -36,7 +37,6 @@ public class CharacterListServlet extends HttpServlet {
 	        }
 
 	        // Fetch all jobs to populate the dropdown.
-	        List<Job> allJobs = jobDao.getAllJobs();
 	        request.setAttribute("allJobs", allJobs);
 	        request.setAttribute("characters", characters);
 	        request.getRequestDispatcher("/characterList.jsp").forward(request, response);
@@ -44,5 +44,6 @@ public class CharacterListServlet extends HttpServlet {
 	        throw new ServletException("SQL error when fetching characters or jobs", e);
 	    }
 	}
+
 
 }
