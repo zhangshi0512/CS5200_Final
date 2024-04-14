@@ -12,11 +12,17 @@ table, th, td {
 </head>
 <body>
     <h1>Search Characters</h1>
-    <form action="characterList" method="get">
-        First Name: <input type="text" name="searchName" />
-        Job: <input type="text" name="filterJob" />
-        <input type="submit" value="Search" />
-    </form>
+	<form action="characterList" method="get">
+	    First Name: <input type="text" name="searchName" />
+	    Job: 
+	    <select name="filterJob">
+	        <option value="">Select a Job</option>
+	        <c:forEach var="job" items="${allJobs}">
+	            <option value="${job.jobID}">${job.name}</option>
+	        </c:forEach>
+	    </select>
+	    <input type="submit" value="Search" />
+	</form>
 
     <h2>Character Results</h2>
     <table>

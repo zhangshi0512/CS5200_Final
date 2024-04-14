@@ -1,43 +1,48 @@
 package pm3.servlet;
 
 import pm3.dao.CharacterDao;
+import pm3.dao.JobDao;
 import pm3.model.Character;
+import pm3.model.Job;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
-// import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// @WebServlet("/characterList")
 public class CharacterListServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// Retrieve the searchName parameter from the request.
-		String firstName = request.getParameter("searchName");
+	        throws ServletException, IOException {
+	    // Retrieve the searchName and filterJob parameters from the request.
+	    String firstName = request.getParameter("searchName");
+	    String filterJobId = request.getParameter("filterJob");
 
-		// Get an instance of the CharacterDao.
-		CharacterDao characterDao = CharacterDao.getInstance();
-		try {
-			List<Character> characters;
-			// Check if the searchName is not provided or is empty.
-			if (firstName == null || firstName.trim().isEmpty()) {
-				// If so, get all characters.
-				characters = characterDao.getAllCharacters();
-				
-			} else {
-				// If a searchName is provided, filter characters by that name.
-				characters = characterDao.getCharactersByFirstName(firstName);
-			}
+	    // Get an instance of the CharacterDao and JobDao.
+	    CharacterDao characterDao = CharacterDao.getInstance();
+	    JobDao jobDao = JobDao.getInstance();
 
-			
-			// Set the characters as a request attribute and forward to the JSP.
-			request.setAttribute("characters", characters);
-			request.getRequestDispatcher("/characterList.jsp").forward(request, response);
-		} catch (SQLException e) {
-			throw new ServletException("SQL error when fetching characters", e);
-		}
+	    try {
+	        List<Character> characters;
+
+	        // Check conditions for filtering.
+	        if ((firstName == null || firstName.trim().isEmpty()) && (filterJobId == null || filterJobId.isEmpty())) {
+	            // No filters provided, get all characters.
+	            characters = characterDao.getAllCharacters();
+	        } else {
+	            // Filter based on the provided criteria.
+	            characters = characterDao.getCharactersByFilters(firstName, filterJobId);
+	        }
+
+	        // Fetch all jobs to populate the dropdown.
+	        List<Job> allJobs = jobDao.getAllJobs();
+	        request.setAttribute("allJobs", allJobs);
+	        request.setAttribute("characters", characters);
+	        request.getRequestDispatcher("/characterList.jsp").forward(request, response);
+	    } catch (SQLException e) {
+	        throw new ServletException("SQL error when fetching characters or jobs", e);
+	    }
 	}
+
 }

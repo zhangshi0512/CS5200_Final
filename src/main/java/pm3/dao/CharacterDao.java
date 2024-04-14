@@ -147,6 +147,69 @@ public class CharacterDao {
         }
         return null;
     }
+    
+    private Character mapCharacter(ResultSet rs) throws SQLException {
+        int characterId = rs.getInt("CharacterID");
+        Player player = PlayerDao.getInstance().getPlayerById(rs.getInt("PlayerID"));
+        Job currentJob = JobDao.getInstance().getJobById(rs.getInt("CurrentJobID"));
+        Weapon mainHandWeapon = WeaponDao.getInstance().getWeaponByID(rs.getInt("MainHandWeaponID"));
+
+        return new Character(
+            characterId, player, 
+            rs.getString("FirstName"), rs.getString("LastName"),
+            rs.getInt("HPMax"), rs.getInt("MPMax"), // Corrected column names
+            currentJob, mainHandWeapon,
+            rs.getInt("Strength"), rs.getInt("Dexterity"), 
+            rs.getInt("Vitality"), rs.getInt("Intelligence"), 
+            rs.getInt("Mind"), rs.getInt("CriticalHit"), 
+            rs.getInt("Determination"), rs.getInt("DirectHitRate"), 
+            rs.getInt("Defense"), rs.getInt("MagicDefense"), 
+            rs.getInt("AttackPower"), rs.getInt("SkillSpeed"), 
+            rs.getInt("AttackMagicPotency"), rs.getInt("HealingMagicPotency"), 
+            rs.getInt("SpellSpeed"), rs.getInt("AverageItemLevel"), 
+            rs.getInt("Tenacity"), rs.getInt("Piety")
+        );
+    }
+
+    
+    public List<Character> getCharactersByFilters(String firstName, String jobId) throws SQLException {
+        List<Character> characters = new ArrayList<>();
+        String query = "SELECT * FROM `Character`"; // Base query
+
+        List<String> conditions = new ArrayList<>();
+        if (firstName != null && !firstName.trim().isEmpty()) {
+            conditions.add("FirstName LIKE ?");
+        }
+        if (jobId != null && !jobId.trim().isEmpty()) {
+            conditions.add("CurrentJobID = ?");
+        }
+
+        if (!conditions.isEmpty()) {
+            query += " WHERE " + String.join(" AND ", conditions);
+        }
+
+        query += " ORDER BY LastName, FirstName";
+
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            int index = 1;
+            if (firstName != null && !firstName.trim().isEmpty()) {
+                ps.setString(index++, "%" + firstName + "%");
+            }
+            if (jobId != null && !jobId.trim().isEmpty()) {
+                ps.setInt(index, Integer.parseInt(jobId));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                characters.add(mapCharacter(rs));
+            }
+        }
+        return characters;
+    }
+
+
 
     public boolean deleteCharacter(int characterID) throws SQLException {
         String deleteCharacter = "DELETE FROM `Character` WHERE CharacterID = ?;";

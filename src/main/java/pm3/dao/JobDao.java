@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 public class JobDao {
     protected ConnectionManager connectionManager;
     private static JobDao instance = null;
@@ -92,6 +94,7 @@ public class JobDao {
         }
         return null;
     }
+    
     public Job updateJob(int jobID, String newName, int newLevelCap) throws SQLException {
         String updateJob = "UPDATE Job SET Name = ?, LevelCap = ? WHERE JobID = ?;";
         Connection connection = null;
@@ -117,5 +120,39 @@ public class JobDao {
                 connection.close();
             }
         }
+    }
+    
+    public List<Job> getAllJobs() throws SQLException {
+        List<Job> jobs = new ArrayList<>();
+        String selectJobs = "SELECT JobID, Name, LevelCap FROM Job;";
+        Connection connection = null;
+        PreparedStatement selectStmt = null;
+        ResultSet results = null;
+        try {
+            connection = connectionManager.getConnection();
+            selectStmt = connection.prepareStatement(selectJobs);
+            results = selectStmt.executeQuery();
+            while (results.next()) {
+                int jobID = results.getInt("JobID");
+                String name = results.getString("Name");
+                int levelCap = results.getInt("LevelCap");
+                Job job = new Job(jobID, name, levelCap);
+                jobs.add(job);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if (results != null) {
+                results.close();
+            }
+            if (selectStmt != null) {
+                selectStmt.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return jobs;
     }
 }
