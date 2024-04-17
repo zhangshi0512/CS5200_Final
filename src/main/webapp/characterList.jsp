@@ -52,6 +52,7 @@ table, th, td {
     		<th>Average Item Level</th>
     		<th>Tenacity</th>
     		<th>Piety</th>
+    		<th>UpdateName</th>
     		
     		
     		
@@ -60,6 +61,7 @@ table, th, td {
        
            <tr>
            		<td><a href="findplayers?email=${character.player.emailAddress}">${character.player.name}</a></td>
+           		<%-- <td><a href="characterDetail?id=${character.characterID}">${character.firstName}</a></td> --%>
            		<td>${character.firstName}</td>
            		<td>${character.lastName}</td>
            		<td>${character.maxHP}</td>
@@ -84,6 +86,7 @@ table, th, td {
            		<td>${character.averageItemLevel}</td>
            		<td>${character.tenacity}</td>
            		<td>${character.piety}</td>
+           		<td><a href="characterDetail?id=${character.characterID}">update</a></td>
            		
            </tr>
        </c:forEach>
