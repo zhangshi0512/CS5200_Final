@@ -35,5 +35,6 @@
         		<td>${player.getEmailAddress()}</td>
     		</tr>
        </table>
+    <a href="characterList">Return to Home</a>
 </body>
 </html>

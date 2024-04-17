@@ -50,8 +50,8 @@
             <li>${gearType}</li>
         </c:forEach>
     </ul>
-	
-		
+
+	<a href="characterList">Return to Home</a>
 
 </body>
 </html>

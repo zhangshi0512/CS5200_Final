@@ -32,5 +32,6 @@
     <%
         }
     %>
+    <a href="characterList">Return to Home</a>
 </body>
 </html>
