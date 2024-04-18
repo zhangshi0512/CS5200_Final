@@ -34,25 +34,7 @@ table, th, td {
     		<th>Max MP</th>
     		<th>Current Job</th>
     		<th>Main-hand Weapon</th>
-    		<th>Strength</th>
-    		<th>Dexterity</th>
-    		<th>Vitality</th>
-    		<th>Intelligence</th>
-    		<th>Mind</th>
-    		<th>Critical Hit</th>
-    		<th>Determination</th>
-    		<th>Direct Hit Rate</th>
-    		<th>Defense</th>
-    		<th>Magic Defense</th>
-    		<th>Attack Power</th>
-    		<th>Skill Speed</th>
-    		<th>Attack Magic Potency</th>
-    		<th>Healing Magic Potency</th>
-    		<th>Spell Speed</th>
-    		<th>Average Item Level</th>
-    		<th>Tenacity</th>
-    		<th>Piety</th>
-    		<th>UpdateName</th>
+    		<th>Character Details</th>
     		
     		
     		
@@ -68,25 +50,7 @@ table, th, td {
            		<td>${character.maxMP}</td>
            		<td><a href="findjob?jobID=${character.currentJob.jobID}">${character.currentJob.name}</a></td>
            		<td><a href="findmainhandweapon?weaponID=${character.mainHandWeapon.itemID}">${character.mainHandWeapon.name}</a></td>
-           		<td>${character.strength}</td>
-           		<td>${character.dexterity}</td>
-           		<td>${character.vitality}</td>
-           		<td>${character.intelligence}</td>
-           		<td>${character.mind}</td>
-           		<td>${character.criticalHit}</td>
-           		<td>${character.determination}</td>
-           		<td>${character.directHitRate}</td>
-           		<td>${character.defense}</td>
-           		<td>${character.magicDefense}</td>
-           		<td>${character.attackPower}</td>
-           		<td>${character.skillSpeed}</td>
-           		<td>${character.attackMagicPotency}</td>
-           		<td>${character.healingMagicPotency}</td>
-           		<td>${character.spellSpeed}</td>
-           		<td>${character.averageItemLevel}</td>
-           		<td>${character.tenacity}</td>
-           		<td>${character.piety}</td>
-           		<td><a href="characterDetail?id=${character.characterID}">update</a></td>
+           		<td><a href="characterDetail?id=${character.characterID}">details</a></td>
            		
            </tr>
        </c:forEach>
